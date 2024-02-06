@@ -12,94 +12,57 @@
 
 #include "pipex.h"
 
-void	handle_files(char *infile, char *outfile, int *in_fd, int *out_fd)
+void	exec(char *cmd, char **env)
 {
-	*in_fd = open(infile, O_RDONLY);
-	if (*in_fd < 0)
+	char	**s_cmd;
+	char	*path;
+
+	s_cmd = ft_split(cmd, ' ');
+	path = get_path(s_cmd[0], env);
+	if (execve(path, s_cmd, env) == -1)
 	{
-		perror("Error opening input file");
-		exit(EXIT_FAILURE);
-	}
-	*out_fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (*out_fd < 0)
-	{
-		perror("Error opening output file");
-		exit(EXIT_FAILURE);
+		ft_putstr_fd("pipex: command not found: ", 2);
+		ft_putendl_fd(s_cmd[0], 2);
+		ft_free_tab(s_cmd);
+		exit(0);
 	}
 }
 
-void	execute_cmd1(int in_fd, int pipefd[2], char *cmd)
+void	child(char **av, int *p_fd, char **env)
 {
-	char	*argv[2];
+	int		fd;
 
-	argv[0] = cmd;
-	argv[1] = NULL;
-	dup2(in_fd, STDIN_FILENO);
-	close(in_fd);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	if (execvp(cmd, argv) == -1)
-	{
-		perror("execvp cmd1");
-		exit(EXIT_FAILURE);
-	}
+	fd = open_file(av[1], 0);
+	dup2(fd, 0);
+	dup2(p_fd[1], 1);
+	close(p_fd[0]);
+	exec(av[2], env);
 }
 
-void	execute_cmd2(int out_fd, int pipefd[2], char *cmd)
+void	parent(char **av, int *p_fd, char **env)
 {
-	char	*argv[2];
+	int		fd;
 
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[1]);
-	close(pipefd[0]);
-	dup2(out_fd, STDOUT_FILENO);
-	close(out_fd);
-	argv[0] = cmd;
-	argv[1] = NULL;
-	if (execvp(cmd, argv) == -1)
-	{
-		perror("execvp cmd2");
-		exit(EXIT_FAILURE);
-	}
+	fd = open_file(av[4], 1);
+	dup2(fd, 1);
+	dup2(p_fd[0], 0);
+	close(p_fd[1]);
+	exec(av[3], env);
 }
 
-void	setup_and_exec_cmds(int argc, char *argv[])
+int	main(int ac, char **av, char **env)
 {
-	int	in_fd;
-	int	out_fd;
-	int	pipefd[2];
+	int		p_fd[2];
+	pid_t	pid;
 
-	(void)argc;
-	handle_files(argv[1], argv[4], &in_fd, &out_fd);
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	if (fork() == 0)
-	{
-		execute_cmd1(in_fd, pipefd, argv[2]);
-	}
-	if (fork() == 0)
-	{
-		execute_cmd2(out_fd, pipefd, argv[3]);
-	}
-	close(in_fd);
-	close(out_fd);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	wait(NULL);
-	wait(NULL);
-}
-
-int	main(int argc, char *argv[])
-{
-	if (argc != 5)
-	{
-		ft_putstr_fd("error: ./pipex infile cmd1 cmd2 outfile\n", 2);
-		exit(EXIT_FAILURE);
-	}
-	setup_and_exec_cmds(argc, argv);
-	return (0);
+	if (ac != 5)
+		exit_handler(1);
+	if (pipe(p_fd) == -1)
+		exit(-1);
+	pid = fork();
+	if (pid == -1)
+		exit(-1);
+	if (!pid)
+		child(av, p_fd, env);
+	parent(av, p_fd, env);
 }

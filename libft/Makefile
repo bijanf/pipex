@@ -6,7 +6,7 @@
 #    By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/16 11:32:28 by bfallah-          #+#    #+#              #
-#    Updated: 2023/11/22 12:11:51 by bfallah-         ###   ########.fr        #
+#    Updated: 2024/02/06 11:41:50 by bfallah-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ SRCS		=	ft_atoi.c \
 				ft_toupper.c \
 				ft_itoa.c \
 				ft_putendl_fd.c \
-				ft_striteri.c
+				ft_striteri.c \
+				ft_strcmp.c
 
 
 OBJS = $(SRCS:.c=.o)

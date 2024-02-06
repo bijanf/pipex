@@ -6,13 +6,14 @@
 #    By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/04 15:00:52 by bfallah-          #+#    #+#              #
-#    Updated: 2024/02/04 17:27:24 by bfallah-         ###   ########.fr        #
+#    Updated: 2024/02/06 11:33:50 by bfallah-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 CFLAGS = -Wextra -Wall -Werror
-SRC = src/pipex.c
+SRC = src/pipex.c src/helper.c
+
 LIBFT = libft
 OBJS = $(SRC:.c=.o)
 

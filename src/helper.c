@@ -6,19 +6,19 @@
 /*   By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:27:34 by bfallah-          #+#    #+#             */
-/*   Updated: 2024/02/07 11:26:07 by bfallah-         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:41:22 by bfallah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	ft_open(char *file, int in_or_out)
+int	ft_open(char *file, int std)
 {
 	int	ret;
 
-	if (in_or_out == 0)
-		ret = open(file, O_RDONLY, 0777);
-	if (in_or_out == 1)
+	if (std == 0)
+		ret = open(file, O_RDONLY);
+	if (std == 1)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
 		exit(0);

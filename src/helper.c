@@ -6,20 +6,13 @@
 /*   By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:27:34 by bfallah-          #+#    #+#             */
-/*   Updated: 2024/02/06 11:28:53 by bfallah-         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:26:07 by bfallah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	exit_handler(int n_exit)
-{
-	if (n_exit == 1)
-		ft_putstr_fd("./pipex infile cmd cmd outfile\n", 2);
-	exit(0);
-}
-
-int	open_file(char *file, int in_or_out)
+int	ft_open(char *file, int in_or_out)
 {
 	int	ret;
 
@@ -32,7 +25,7 @@ int	open_file(char *file, int in_or_out)
 	return (ret);
 }
 
-void	ft_free_tab(char **tab)
+void	ft_free(char **tab)
 {
 	size_t	i;
 
@@ -45,7 +38,7 @@ void	ft_free_tab(char **tab)
 	free(tab);
 }
 
-char	*my_getenv(char *name, char **env)
+char	*ft_getenv(char *name, char **env)
 {
 	int		i;
 	int		j;
@@ -78,7 +71,7 @@ char	*get_path(char *cmd, char **env)
 	char	**s_cmd;
 
 	i = -1;
-	allpath = ft_split(my_getenv("PATH", env), ':');
+	allpath = ft_split(ft_getenv("PATH", env), ':');
 	s_cmd = ft_split(cmd, ' ');
 	while (allpath[++i])
 	{
@@ -87,12 +80,19 @@ char	*get_path(char *cmd, char **env)
 		free(path_part);
 		if (access(exec, F_OK | X_OK) == 0)
 		{
-			ft_free_tab(s_cmd);
+			ft_free(s_cmd);
 			return (exec);
 		}
 		free(exec);
 	}
-	ft_free_tab(allpath);
-	ft_free_tab(s_cmd);
+	ft_free(allpath);
+	ft_free(s_cmd);
 	return (cmd);
+}
+
+void	ft_exit(int n_exit)
+{
+	if (n_exit == 1)
+		ft_putstr_fd("syntax: ./pipex infile cmd1 cmd2 outfile\n", 2);
+	exit(0);
 }

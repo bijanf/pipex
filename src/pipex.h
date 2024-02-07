@@ -6,7 +6,7 @@
 /*   By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 15:40:04 by bfallah-          #+#    #+#             */
-/*   Updated: 2024/02/06 11:29:59 by bfallah-         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:26:25 by bfallah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@
 # include <fcntl.h>
 # include <stdlib.h>
 
-int		open_file(char *file, int n);
-char	*my_getenv(char *name, char **env);
+int		ft_open(char *file, int n);
+char	*ft_getenv(char *name, char **env);
 char	*get_path(char *cmd, char **env);
-void	exec(char *cmd, char **env);
-void	ft_free_tab(char **tab);
-void	exit_handler(int n_exit);
+void	execute(char *cmd, char **env);
+void	ft_free(char **tab);
+void	ft_exit(int n_exit);
 
 #endif

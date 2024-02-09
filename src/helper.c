@@ -6,7 +6,7 @@
 /*   By: bfallah- <bfallah-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 11:27:34 by bfallah-          #+#    #+#             */
-/*   Updated: 2024/02/07 11:41:22 by bfallah-         ###   ########.fr       */
+/*   Updated: 2024/02/09 10:43:39 by bfallah-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	ft_open(char *file, int std)
 	if (std == 1)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
-		exit(0);
+	{
+		perror("Error opening file");
+		exit (EXIT_FAILURE);
+	}
 	return (ret);
 }
 
